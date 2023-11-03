@@ -1,5 +1,5 @@
-import Loading from "./loading";
+import NotFoundPage from "./not-found";
 
 export default function Home() {
-    return <Loading/>;
+    return <NotFoundPage />;
 }
