@@ -1,5 +1,5 @@
-import NotFoundPage from "./not-found";
+import ErrorPage from "./error";
 
 export default function Home() {
-    return <NotFoundPage />;
+    return <ErrorPage />;
 }
