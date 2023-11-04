@@ -1,5 +1,5 @@
-import ErrorPage from "./error";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-    return <ErrorPage />;
+    return redirect("/signup");
 }
