@@ -4,18 +4,32 @@ import Form from "@/components/Form/Form";
 import FormInput from "@/components/Form/FormInput";
 import PrimaryButton from "@/components/ui/PrimaryButton";
 import Spinner from "@/components/ui/Spinner";
+import { useSignupMutation } from "@/redux/features/api/authApi";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { FaFacebook, FaGithub, FaGoogle } from "react-icons/fa";
 
 const SignupPage = () => {
-    const [loading, setLoading] = useState(false);
-    const { register, formState, reset } = useForm();
-    const { errors } = formState;
+    const router = useRouter();
+
+    const [signup, { isLoading }] = useSignupMutation();
 
     const onSubmit: SubmitHandler<any> = (data) => {
-        console.log(data);
+        try {
+            signup(data)
+                .unwrap()
+                .then((res) => {
+                    toast.success(res.message);
+                    router.push("/signin");
+                })
+                .catch((err) => {
+                    toast.error(err.data.message);
+                });
+        } catch (error) {
+            toast.error("Something went wrong");
+        }
     };
     return (
         <div className="max-w-lg mx-auto mt-10  md:mt-14 lg:mt-20 bg-gray-100 px-12 py-14 rounded-xl divide-y-2">
@@ -23,14 +37,19 @@ const SignupPage = () => {
             <Form submitHandler={onSubmit}>
                 <FormInput name="name" label="Name" required />
                 <FormInput name="email" label="Email" required />
-                <FormInput name="password" type="password" label="Password" required />
-                
+                <FormInput
+                    name="password"
+                    type="password"
+                    label="Password"
+                    required
+                />
+
                 {/* Signup button */}
                 <PrimaryButton
                     type="submit"
                     classes="w-full px-8 py-3 mt-4 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100"
                 >
-                    {loading ? <Spinner /> : "Sign Up"}
+                    {isLoading ? <Spinner /> : "Sign Up"}
                 </PrimaryButton>
 
                 <div className="mt-2 mb-3">
