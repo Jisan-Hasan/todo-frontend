@@ -29,7 +29,7 @@ const SigninPage = () => {
                 .then((res) => {
                     dispatch(setToken(res?.data?.accessToken));
                     toast.success(res.message);
-                    // router.push('/task');
+                    router.push('/task');
                 })
                 .catch((err) => {
                     toast.error(err.data.message);
