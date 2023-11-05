@@ -1,6 +1,7 @@
 "use client";
 
 import AddTodoForm from "@/components/ui/AddTodoForm";
+import Header from "@/components/ui/Header";
 import PaginationComponent from "@/components/ui/Pagination";
 import TaskFilterSection from "@/components/ui/TaskFilterSection";
 import TaskUpdateModal from "@/components/ui/TaskUpdateModal";
@@ -49,6 +50,9 @@ const TaskPage = () => {
 
     return (
         <div className="w-full max-w-3xl mx-auto mt-6 shadow-lg rounded-lg p-6 bg-white">
+            {/* Header */}
+            <Header />
+            
             {/* Add task form */}
             <AddTodoForm />
 

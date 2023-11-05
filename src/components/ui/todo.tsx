@@ -28,12 +28,15 @@ export default function Todo({ todo }: { todo: any }) {
     const [deleteTask] = useDeleteTaskMutation();
     const [updateTask] = useUpdateTaskMutation();
 
+    // update task status
     const handleUpdateStatus = (todoId: string, updatedStatus: string) => {
+        // check if task is already in the same status
         if (status === updatedStatus) {
             toast.error(`Task already in ${status}`);
             return;
         }
         toast.loading("Updating task...", { duration: 500 });
+        // update task
         updateTask({ id: todoId, data: { status: updatedStatus } })
             .unwrap()
             .then((res) => toast.success(res.message))
@@ -42,6 +45,7 @@ export default function Todo({ todo }: { todo: any }) {
             );
     };
 
+    // delete task
     const handleDelete = (todoId: any) => {
         toast.loading("Deleting task...", { duration: 500 });
         deleteTask(todoId)
@@ -52,6 +56,7 @@ export default function Todo({ todo }: { todo: any }) {
             );
     };
 
+    // task status icon
     const icon =
         status === "pending" ? (
             <AiOutlineMinusCircle

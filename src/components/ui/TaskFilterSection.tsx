@@ -9,9 +9,10 @@ import { TbProgressBolt } from "react-icons/tb";
 
 const TaskFilterSection = () => {
     const dispatch = useAppDispatch();
-    const { searchTerm, status } = useAppSelector((state) => state.filter);
+    const { status } = useAppSelector((state) => state.filter);
     const [search, setSearch] = useState("");
 
+    // debounce search term
     const debouncedTerm = useDebounced({
         searchQuery: search,
         delay: 600,
@@ -27,7 +28,6 @@ const TaskFilterSection = () => {
         <div className="flex justify-between items-center my-4 text-sm text-gray-500">
             <div
                 className="flex items-center space-x-1 cursor-pointer"
-                // onClick={completeHadler}
             >
                 <div
                     className={`flex gap-1 items-center hover:text-purple-500 ${
