@@ -1,6 +1,9 @@
 "use client";
 
-import { useDeleteTaskMutation } from "@/redux/features/api/todoApi";
+import {
+    useDeleteTaskMutation,
+    useUpdateTaskMutation,
+} from "@/redux/features/api/todoApi";
 import toast from "react-hot-toast";
 import {
     AiOutlineCheckCircle,
@@ -20,13 +23,20 @@ export default function Todo({ todo }: { todo: any }) {
             : "text-green-500";
 
     const [deleteTask] = useDeleteTaskMutation();
+    const [updateTask] = useUpdateTaskMutation();
 
-    const handleStatusChange = (todoId: any) => {
-        // dispatch(toggled(todoId));
-    };
-
-    const handleColorChange = (todoId: any, color: any) => {
-        // dispatch(colorSelected(todoId, color));
+    const handleUpdateStatus = (todoId: string, updatedStatus: string) => {
+        if (status === updatedStatus) {
+            toast.error(`Task already in ${status}`);
+            return;
+        }
+        toast.loading("Updating task...", { duration: 500 });
+        updateTask({ id: todoId, data: { status: updatedStatus } })
+            .unwrap()
+            .then((res) => toast.success(res.message))
+            .catch((err) =>
+                toast.error(err?.data?.message || "Something went wrong")
+            );
     };
 
     const handleDelete = (todoId: any) => {
@@ -68,17 +78,26 @@ export default function Todo({ todo }: { todo: any }) {
 
             <AiOutlineMinusCircle
                 className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  hover:text-yellow-500`}
+                title="Mark as pending"
+                onClick={() => handleUpdateStatus(id, "pending")}
             />
 
             <TbProgressBolt
                 className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  hover:text-orange-500`}
+                title="Mark as in-progress"
+                onClick={() => handleUpdateStatus(id, "in-progress")}
             />
 
             <AiOutlineCheckCircle
                 className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  hover:text-green-500`}
+                title="Mark as done"
+                onClick={() => handleUpdateStatus(id, "done")}
             />
 
-            <AiOutlineEdit className="flex-shrink-0 w-5 h-5 ml-2 cursor-pointer hover:text-red-700" />
+            <AiOutlineEdit
+                className="flex-shrink-0 w-5 h-5 ml-2 cursor-pointer hover:text-red-700"
+                title="Edit"
+            />
 
             <MdOutlineCancel
                 className="flex-shrink-0 w-5 h-5 ml-2 cursor-pointer hover:text-red-700"

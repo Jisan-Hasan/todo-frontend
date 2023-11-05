@@ -25,8 +25,16 @@ export const todoApi = baseApi.injectEndpoints({
                 method: "DELETE",
             }),
             invalidatesTags: ["task"],
+        }),
+        updateTask: builder.mutation({
+            query: (todo)=> ({
+                url: `${TASK_URL}/${todo.id}`,
+                method: "PATCH",
+                body: todo.data,
+            }),
+            invalidatesTags: ["task"],
         })
     }),
 });
 
-export const { useAddTaskMutation, useGetTasksQuery, useDeleteTaskMutation } = todoApi;
+export const { useAddTaskMutation, useGetTasksQuery, useDeleteTaskMutation, useUpdateTaskMutation } = todoApi;
