@@ -1,5 +1,7 @@
 "use client";
 
+import { useDeleteTaskMutation } from "@/redux/features/api/todoApi";
+import toast from "react-hot-toast";
 import {
     AiOutlineCheckCircle,
     AiOutlineEdit,
@@ -9,7 +11,15 @@ import { MdOutlineCancel } from "react-icons/md";
 import { TbProgressBolt } from "react-icons/tb";
 
 export default function Todo({ todo }: { todo: any }) {
-    const { text, id, completed, color } = todo;
+    const { title, _id: id, status } = todo;
+    const color =
+        status == "pending"
+            ? "text-yellow-500"
+            : status === "in-progress"
+            ? "text-orange-500"
+            : "text-green-500";
+
+    const [deleteTask] = useDeleteTaskMutation();
 
     const handleStatusChange = (todoId: any) => {
         // dispatch(toggled(todoId));
@@ -20,60 +30,61 @@ export default function Todo({ todo }: { todo: any }) {
     };
 
     const handleDelete = (todoId: any) => {
-        // dispatch(deleted(todoId));
+        toast.loading("Deleting task...", { duration: 500 });
+        deleteTask(todoId)
+            .unwrap()
+            .then((res) => toast.success(res.message))
+            .catch((err) =>
+                toast.error(err?.data?.message || "Something went wrong")
+            );
     };
+
+    const icon =
+        status === "pending" ? (
+            <AiOutlineMinusCircle
+                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  ${color}`}
+            />
+        ) : status === "in-progress" ? (
+            <TbProgressBolt
+                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  ${color}`}
+            />
+        ) : (
+            <AiOutlineCheckCircle
+                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  ${color}`}
+            />
+        );
 
     return (
         <div className="flex justify-start items-center p-2 hover:bg-gray-100 hover:transition-all space-x-4 border-b border-gray-400/20 last:border-0">
-            <div
-                className={`rounded-full bg-white border-2 border-gray-400 w-5 h-5 flex flex-shrink-0 justify-center items-center mr-2 ${
-                    completed &&
-                    "border-green-500 focus-within:border-green-500"
-                }`}
-            >
-                <input
-                    type="checkbox"
-                    checked={completed}
-                    onChange={() => handleStatusChange(id)}
-                    className="opacity-0 absolute rounded-full"
-                />
-                {completed && (
-                    <svg
-                        className="fill-current w-3 h-3 text-green-500 pointer-events-none"
-                        viewBox="0 0 20 20"
-                    >
-                        <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
-                    </svg>
-                )}
-            </div>
+            {icon}
 
             <div
-                className={`select-none flex-1 ${completed && "line-through"}`}
+                className={`select-none flex-1 ${
+                    status === "done" && "line-through"
+                }`}
             >
-                {text}
+                {title}
             </div>
 
             <AiOutlineMinusCircle
-                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer hover:text-red-500 ${
-                    color === "red" && "text-red-500"
-                }`}
+                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  hover:text-yellow-500`}
             />
 
             <TbProgressBolt
-                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer hover:text-red-500 ${
-                    color === "red" && "text-red-500"
-                }`}
+                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  hover:text-orange-500`}
             />
 
             <AiOutlineCheckCircle
-                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer hover:text-red-500 ${
-                    color === "red" && "text-red-500"
-                }`}
+                className={`flex-shrink-0 h-5 w-5 ml-auto cursor-pointer  hover:text-green-500`}
             />
 
-            <AiOutlineEdit className="flex-shrink-0 w-5 h-5 ml-2 cursor-pointer" />
+            <AiOutlineEdit className="flex-shrink-0 w-5 h-5 ml-2 cursor-pointer hover:text-red-700" />
 
-            <MdOutlineCancel className="flex-shrink-0 w-5 h-5 ml-2 cursor-pointer" />
+            <MdOutlineCancel
+                className="flex-shrink-0 w-5 h-5 ml-2 cursor-pointer hover:text-red-700"
+                title="Delete"
+                onClick={() => handleDelete(id)}
+            />
         </div>
     );
 }

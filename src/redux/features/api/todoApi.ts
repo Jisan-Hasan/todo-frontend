@@ -10,8 +10,23 @@ export const todoApi = baseApi.injectEndpoints({
                 method: "POST",
                 body: todoData,
             }),
+            invalidatesTags: ["task"],
         }),
+        getTasks: builder.query({
+            query: () => ({
+                url: `${TASK_URL}`,
+                method: "GET",
+            }),
+            providesTags: ["task"],
+        }),
+        deleteTask: builder.mutation({
+            query: (id) => ({
+                url: `${TASK_URL}/${id}`,
+                method: "DELETE",
+            }),
+            invalidatesTags: ["task"],
+        })
     }),
 });
 
-export const { useAddTaskMutation } = todoApi;
+export const { useAddTaskMutation, useGetTasksQuery, useDeleteTaskMutation } = todoApi;
