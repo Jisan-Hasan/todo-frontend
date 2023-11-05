@@ -19,6 +19,12 @@ export const todoApi = baseApi.injectEndpoints({
             }),
             providesTags: ["task"],
         }),
+        getTask: builder.query({
+            query: (id) => ({
+                url: `${TASK_URL}/${id}`,
+                method: "GET",
+            }),
+        }),
         deleteTask: builder.mutation({
             query: (id) => ({
                 url: `${TASK_URL}/${id}`,
@@ -27,14 +33,20 @@ export const todoApi = baseApi.injectEndpoints({
             invalidatesTags: ["task"],
         }),
         updateTask: builder.mutation({
-            query: (todo)=> ({
+            query: (todo) => ({
                 url: `${TASK_URL}/${todo.id}`,
                 method: "PATCH",
                 body: todo.data,
             }),
             invalidatesTags: ["task"],
-        })
+        }),
     }),
 });
 
-export const { useAddTaskMutation, useGetTasksQuery, useDeleteTaskMutation, useUpdateTaskMutation } = todoApi;
+export const {
+    useAddTaskMutation,
+    useGetTasksQuery,
+    useGetTaskQuery,
+    useDeleteTaskMutation,
+    useUpdateTaskMutation,
+} = todoApi;

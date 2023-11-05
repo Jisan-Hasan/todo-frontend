@@ -1,6 +1,7 @@
 "use client";
 
 import AddTodoForm from "@/components/ui/AddTodoForm";
+import TaskUpdateModal from "@/components/ui/TaskUpdateModal";
 import Todo from "@/components/ui/todo";
 import { useAppSelector } from "@/redux/app/hooks";
 import { useGetTasksQuery } from "@/redux/features/api/todoApi";
@@ -23,6 +24,8 @@ const TaskPage = () => {
     const color = "red";
     const completed = false;
     const text = "This is a todo item";
+
+    const { selectedTask } = useAppSelector((state) => state.task);
 
     return (
         <div className="w-full max-w-3xl mx-auto mt-6 shadow-lg rounded-lg p-6 bg-white">
@@ -55,6 +58,9 @@ const TaskPage = () => {
                 ))}
             </div>
             {/* Task List End */}
+
+            {/* Task Update Modal */}
+            {selectedTask && <TaskUpdateModal selectedTask={selectedTask} />}
         </div>
     );
 };
