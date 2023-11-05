@@ -17,6 +17,8 @@ git clone https://github.com/Jisan-Hasan/todo-frontend
 ```
 
 -   Run `yarn install` to install all the dependencies
+-   Create a `.env.local` file in the root directory
+-   Add the environment variables in the `.env.local` file as like as `.env.example` file
 -   Run `yarn dev` to start the development server
 -   Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
