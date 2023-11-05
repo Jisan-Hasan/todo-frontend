@@ -3,11 +3,15 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 interface FilterState {
     searchTerm: string;
     status: string;
+    page: number;
+    limit: number;
 }
 
 const initialState: FilterState = {
     searchTerm: "",
     status: "",
+    page: 1,
+    limit: 10,
 };
 
 export const filterSlice = createSlice({
@@ -20,9 +24,15 @@ export const filterSlice = createSlice({
         setSearchTerm: (state, action: PayloadAction<string>) => {
             state.searchTerm = action.payload;
         },
+        setPage: (state, action: PayloadAction<number>) => {
+            state.page = action.payload;
+        },
+        setLimit: (state, action: PayloadAction<number>) => {
+            state.limit = action.payload;
+        },
     },
 });
 
-export const { setStatus, setSearchTerm } = filterSlice.actions;
+export const { setStatus, setSearchTerm, setPage, setLimit } = filterSlice.actions;
 
 export default filterSlice.reducer;

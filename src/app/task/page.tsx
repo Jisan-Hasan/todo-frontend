@@ -1,6 +1,7 @@
 "use client";
 
 import AddTodoForm from "@/components/ui/AddTodoForm";
+import PaginationComponent from "@/components/ui/Pagination";
 import TaskFilterSection from "@/components/ui/TaskFilterSection";
 import TaskUpdateModal from "@/components/ui/TaskUpdateModal";
 import Todo from "@/components/ui/todo";
@@ -18,34 +19,40 @@ const TaskPage = () => {
         router.push("/signin");
     }
 
-    const query: Record<string, any> = {};
-
     // get filter data from redux store
-    const { searchTerm, status } = useAppSelector((state) => state.filter);
+    const { searchTerm, status, limit, page } = useAppSelector(
+        (state) => state.filter
+    );
 
+    // prepare search query
+    const query: Record<string, any> = {};
     if (!!searchTerm) {
         query["searchTerm"] = searchTerm;
     }
     if (!!status) {
         query["status"] = status;
     }
-
-    // console.log(query);
+    if (!!limit) {
+        query["limit"] = limit;
+    }
+    if (!!page) {
+        query["page"] = page;
+    }
 
     const { data } = useGetTasksQuery({ ...query });
     const todos = data?.data || [];
+    const meta = data?.meta || { total: 1, limit: 10, page: 1 };
 
-    // temp data
-    const color = "red";
-    const completed = false;
-    const text = "This is a todo item";
+    const totalPages = Math.ceil(meta?.total / meta?.limit) || 1;
 
     const { selectedTask } = useAppSelector((state) => state.task);
 
     return (
         <div className="w-full max-w-3xl mx-auto mt-6 shadow-lg rounded-lg p-6 bg-white">
+            {/* Add task form */}
             <AddTodoForm />
 
+            {/* task filter */}
             <TaskFilterSection />
 
             <hr className="mt-4" />
@@ -57,6 +64,11 @@ const TaskPage = () => {
                 ))}
             </div>
             {/* Task List End */}
+
+            <hr className="mt-4" />
+
+            {/* Pagination  */}
+            <PaginationComponent total={totalPages} />
 
             {/* Task Update Modal */}
             {selectedTask && <TaskUpdateModal selectedTask={selectedTask} />}
