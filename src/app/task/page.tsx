@@ -1,6 +1,7 @@
 "use client";
 
 import AddTodoForm from "@/components/ui/AddTodoForm";
+import TaskFilterSection from "@/components/ui/TaskFilterSection";
 import TaskUpdateModal from "@/components/ui/TaskUpdateModal";
 import Todo from "@/components/ui/todo";
 import { useAppSelector } from "@/redux/app/hooks";
@@ -17,7 +18,21 @@ const TaskPage = () => {
         router.push("/signin");
     }
 
-    const { data } = useGetTasksQuery(undefined);
+    const query: Record<string, any> = {};
+
+    // get filter data from redux store
+    const { searchTerm, status } = useAppSelector((state) => state.filter);
+
+    if (!!searchTerm) {
+        query["searchTerm"] = searchTerm;
+    }
+    if (!!status) {
+        query["status"] = status;
+    }
+
+    // console.log(query);
+
+    const { data } = useGetTasksQuery({ ...query });
     const todos = data?.data || [];
 
     // temp data
@@ -29,25 +44,9 @@ const TaskPage = () => {
 
     return (
         <div className="w-full max-w-3xl mx-auto mt-6 shadow-lg rounded-lg p-6 bg-white">
-            {/* Header Start */}
             <AddTodoForm />
 
-            {/* <div className="flex justify-between my-4 text-xs text-gray-500">
-                <div
-                    className="flex space-x-1 cursor-pointer"
-                    // onClick={completeHadler}
-                >
-                    <MdDoneAll className="w-4 h-4" />
-                    <span>Complete All Tasks</span>
-                </div>
-                <div
-                    className="cursor-pointer"
-                    // onClick={clearHeandler}
-                >
-                    Clear completed
-                </div>
-            </div> */}
-            {/* Header End */}
+            <TaskFilterSection />
 
             <hr className="mt-4" />
 

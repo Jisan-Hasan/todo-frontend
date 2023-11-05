@@ -13,9 +13,10 @@ export const todoApi = baseApi.injectEndpoints({
             invalidatesTags: ["task"],
         }),
         getTasks: builder.query({
-            query: () => ({
+            query: (arg: Record<string, any>) => ({
                 url: `${TASK_URL}`,
                 method: "GET",
+                params: arg,
             }),
             providesTags: ["task"],
         }),
